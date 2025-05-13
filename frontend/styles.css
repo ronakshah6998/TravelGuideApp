@@ -1,24 +1,10 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-.gradient-bg {
-    background: linear-gradient(135deg, #1e3a8a 0%, #065f46 100%);
-}
-.card-hover {
-    transition: all 0.3s ease;
-}
-.card-hover:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-}
-.globe-float {
-    animation: float 6s ease-in-out infinite;
-}
 @keyframes float {
     0% { transform: translateY(0px); }
     50% { transform: translateY(-10px); }
     100% { transform: translateY(0px); }
+}
+.globe-float {
+    animation: float 6s ease-in-out infinite;
 }
 .message-enter {
     animation: fadeIn 0.3s ease-out;
@@ -47,6 +33,16 @@
 @keyframes bounce {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-5px); }
+}
+.gradient-bg {
+    background: linear-gradient(135deg, #1e3a8a 0%, #065f46 100%);
+}
+.card-hover {
+    transition: all 0.3s ease;
+}
+.card-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 .destination-card {
     background-size: cover;

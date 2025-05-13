@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Explorer Chatbot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50 h-screen flex flex-col">
+    <!-- Enhanced Header with world explorer theme -->
+    <header class="gradient-bg text-white p-4 shadow-lg">
+        <div class="container mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="relative">
+                    <i class="fas fa-globe-americas text-3xl text-blue-300"></i>
+                    <div class="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                </div>
+                <h1 class="text-2xl font-bold">World Explorer <span class="text-xs font-normal bg-blue-800 px-2 py-1 rounded-full ml-2">PRO</span></h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="bg-white bg-opacity-20 backdrop-blur-sm px-4 py-2 rounded-full font-medium hover:bg-opacity-30 transition flex items-center">
+                    <i class="fas fa-passport mr-2"></i>My Travels
+                    <span class="ml-2 bg-yellow-400 text-blue-900 text-xs px-2 py-0.5 rounded-full">3</span>
+                </button>
+                <button class="bg-white text-blue-700 px-4 py-2 rounded-full font-semibold hover:bg-blue-50 transition flex items-center">
+                    <i class="fas fa-map-marked-alt mr-2"></i>Discover
+                </button>
+                <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center cursor-pointer">
+                    <i class="fas fa-user text-white"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main chat container with sidebar -->
+    <div class="flex-1 flex container mx-auto max-w-7xl">
+        <!-- Sidebar with travel tools -->
+        <div class="w-64 bg-white p-4 hidden md:block border-r border-gray-200">
+            <div class="mb-6">
+                <h3 class="font-semibold text-gray-700 mb-3 flex items-center">
+                    <i class="fas fa-compass mr-2 text-blue-500"></i> Travel Tools
+                </h3>
+                <ul class="space-y-2">
+                    <li class="flex items-center p-2 rounded-lg hover:bg-blue-50 cursor-pointer">
+                        <i class="fas fa-plane mr-3 text-blue-500"></i>
+                        <span>Flight Finder</span>
+                    </li>
+                    <li class="flex items-center p-2 rounded-lg hover:bg-blue-50 cursor-pointer">
+                        <i class="fas fa-hotel mr-3 text-blue-500"></i>
+                        <span>Hotel Search</span>
+                    </li>
+                    <li class="flex items-center p-2 rounded-lg hover:bg-blue-50 cursor-pointer">
+                        <i class="fas fa-utensils mr-3 text-blue-500"></i>
+                        <span>Local Cuisine</span>
+                    </li>
+                    <li class="flex items-center p-2 rounded-lg hover:bg-blue-50 cursor-pointer">
+                        <i class="fas fa-calendar-alt mr-3 text-blue-500"></i>
+                        <span>Event Calendar</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="mb-6">
+                <h3 class="font-semibold text-gray-700 mb-3 flex items-center">
+                    <i class="fas fa-fire mr-2 text-orange-500"></i> Trending
+                </h3>
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="destination-card" style="background-image: url('https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60')">
+                        <div class="destination-card-content">
+                            <div class="font-medium text-sm">Bali</div>
+                            <div class="text-xs">Indonesia</div>
+                        </div>
+                    </div>
+                    <div class="destination-card" style="background-image: url('https://images.unsplash.com/photo-1533107862482-0e6974b06ec4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60')">
+                        <div class="destination-card-content">
+                            <div class="font-medium text-sm">Kyoto</div>
+                            <div class="text-xs">Japan</div>
+                        </div>
+                    </div>
+                    <div class="destination-card" style="background-image: url('https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60')">
+                        <div class="destination-card-content">
+                            <div class="font-medium text-sm">Santorini</div>
+                            <div class="text-xs">Greece</div>
+                        </div>
+                    </div>
+                    <div class="destination-card" style="background-image: url('https://images.unsplash.com/photo-1518391846015-55a9cc003b25?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60')">
+                        <div class="destination-card-content">
+                            <div class="font-medium text-sm">Patagonia</div>
+                            <div class="text-xs">Chile</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="weather-widget p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <div>
+                        <div class="font-medium">Current Location</div>
+                        <div class="text-sm opacity-90">New York, USA</div>
+                    </div>
+                    <div class="text-3xl">72°F</div>
+                </div>
+                <div class="flex items-center justify-between text-sm">
+                    <div class="flex items-center">
+                        <i class="fas fa-cloud-sun mr-1"></i>
+                        <span>Partly Cloudy</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-wind mr-1"></i>
+                        <span>8 mph</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main chat area -->
+        <main class="flex-1 flex flex-col p-4">
+            <!-- Welcome card with globe animation -->
+            <div class="bg-white rounded-xl shadow-md p-6 mb-4 text-center card-hover">
+                <div class="globe-float inline-block mb-4">
+                    <i class="fas fa-globe text-6xl text-blue-500"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Welcome to World Explorer!</h2>
+                <p class="text-gray-600 mb-4">I'm your virtual travel guide. Ask me about destinations, cultures, landmarks, or travel tips!</p>
+                <div class="flex flex-wrap justify-center gap-2">
+                    <button onclick="sendQuickQuestion(this)" class="suggestion-chip bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm hover:bg-blue-200 transition flex items-center">
+                        <i class="fas fa-umbrella-beach mr-1"></i> Best beaches
+                    </button>
+                    <button onclick="sendQuickQuestion(this)" class="suggestion-chip bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm hover:bg-blue-200 transition flex items-center">
+                        <i class="fas fa-monument mr-1"></i> Landmarks
+                    </button>
+                    <button onclick="sendQuickQuestion(this)" class="suggestion-chip bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm hover:bg-blue-200 transition flex items-center">
+                        <i class="fas fa-wallet mr-1"></i> Budget tips
+                    </button>
+                    <button onclick="sendQuickQuestion(this)" class="suggestion-chip bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm hover:bg-blue-200 transition flex items-center">
+                        <i class="fas fa-route mr-1"></i> Itineraries
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat messages container -->
+            <div id="chat-container" class="flex-1 overflow-y-auto mb-4 space-y-4">
+                <!-- Messages will appear here -->
+            </div>
+
+            <!-- Enhanced input area with special features -->
+            <div class="bg-white rounded-xl shadow-lg p-4 sticky bottom-4">
+                <div class="flex items-center mb-2">
+                    <div class="flex space-x-1">
+                        <button onclick="showTravelThemes()" class="text-gray-500 hover:text-blue-500 p-2 rounded-full hover:bg-blue-50 transition" title="Travel Themes">
+                            <i class="fas fa-palette"></i>
+                        </button>
+                        <button onclick="showMap()" class="text-gray-500 hover:text-blue-500 p-2 rounded-full hover:bg-blue-50 transition" title="Map">
+                            <i class="fas fa-map"></i>
+                        </button>
+                        <button onclick="showLanguageOptions()" class="text-gray-500 hover:text-blue-500 p-2 rounded-full hover:bg-blue-50 transition" title="Languages">
+                            <i class="fas fa-language"></i>
+                        </button>
+                        <button onclick="showWeather()" class="text-gray-500 hover:text-blue-500 p-2 rounded-full hover:bg-blue-50 transition" title="Weather">
+                            <i class="fas fa-cloud-sun"></i>
+                        </button>
+                    </div>
+                    <div class="ml-auto flex space-x-1">
+                        <button onclick="showVoiceInput()" class="text-gray-500 hover:text-blue-500 p-2 rounded-full hover:bg-blue-50 transition" title="Voice Input">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                        <button onclick="attachFile()" class="text-gray-500 hover:text-blue-500 p-2 rounded-full hover:bg-blue-50 transition" title="Attach File">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                        <button onclick="showCurrencyConverter()" class="text-gray-500 hover:text-blue-500 p-2 rounded-full hover:bg-blue-50 transition" title="Currency">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="flex">
+                    <input 
+                        id="user-input" 
+                        type="text" 
+                        placeholder="Ask about any destination or travel topic..." 
+                        class="flex-1 border border-gray-300 rounded-l-full py-3 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        onkeypress="handleKeyPress(event)"
+                    >
+                    <button 
+                        onclick="sendMessage()" 
+                        class="bg-blue-600 text-white px-6 rounded-r-full hover:bg-blue-700 transition flex items-center"
+                    >
+                        <span>Send</span>
+                        <i class="fas fa-paper-plane ml-2"></i>
+                    </button>
+                </div>
+                <div id="quick-suggestions" class="mt-3 flex flex-wrap gap-2 hidden">
+                    <!-- Quick suggestions will appear here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
