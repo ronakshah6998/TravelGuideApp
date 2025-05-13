@@ -209,5 +209,42 @@ def get_api_status():
         'geo_api_key_type': 'dummy' if config.USE_MOCK_DATA else 'real'
     })
 
+# --- Fun Fact Endpoint ---
+@app.route('/api/funfact', methods=['POST'])
+def get_fun_fact():
+    data = request.get_json()
+    if not data or 'query' not in data:
+        return jsonify({"status": "error", "message": "Missing 'query' in request."}), 400
+    query = data['query']
+
+    # Simple city extraction (looks for 'about <city>' in the query)
+    import re
+    match = re.search(r'about ([a-zA-Z\s]+)', query.lower())
+    if not match:
+        return jsonify({"status": "error", "message": "Could not extract city from query."}), 400
+    city = match.group(1).strip().title()
+
+    # Call Swift Chat API
+    swiftchat_api_key = '21bda582-e8d0-45bc-bb8b-a5c6c555d176'
+    swiftchat_api_url = 'https://api.swiftchat.example.com/v1/chat'  # Replace with actual URL if needed
+    headers = {
+        'Authorization': f'Bearer {swiftchat_api_key}',
+        'Content-Type': 'application/json'
+    }
+    payload = {
+        'message': f'Tell me a fun fact about {city}',
+        'user_id': 'funfact-user',
+        'context': {'location': city}
+    }
+    try:
+        response = requests.post(swiftchat_api_url, headers=headers, json=payload, timeout=10)
+        response.raise_for_status()
+        chat_data = response.json()
+        # Extract message from API response (update as per actual API response structure)
+        fun_fact = chat_data.get('message') or chat_data.get('response') or chat_data
+        return jsonify({"status": "success", "city": city, "fun_fact": fun_fact})
+    except Exception as e:
+        return jsonify({"status": "error", "message": f"Failed to fetch fun fact: {str(e)}"}), 500
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

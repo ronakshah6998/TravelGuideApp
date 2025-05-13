@@ -110,7 +110,7 @@ const CityPage = () => {
         </Typography>
       </Breadcrumbs>
 
-      <Grid container spacing={4}>
+      <Grid container spacing={{ xs: 2, md: 4 }}>
         <Grid item xs={12} md={8}>
           <Card>
             <CardMedia
@@ -118,10 +118,23 @@ const CityPage = () => {
               height="400"
               image={getCityImage(city, { name: city.country })}
               alt={city.name}
-              sx={{ objectFit: 'cover' }}
+              sx={{ 
+                objectFit: 'cover',
+                '@media (max-width: 600px)': {
+                  height: '250px'
+                }
+              }}
             />
-            <CardContent>
-              <Typography variant="h4" component="h1" gutterBottom>
+            <CardContent sx={{
+              '@media (max-width: 600px)': {
+                padding: '16px'
+              }
+            }}>
+              <Typography variant="h4" component="h1" gutterBottom sx={{
+                '@media (max-width: 600px)': {
+                  fontSize: '1.75rem'
+                }
+              }}>
                 {city.name}, {city.country}
               </Typography>
               
@@ -149,7 +162,13 @@ const CityPage = () => {
               <Divider sx={{ my: 3 }} />
               
               <Box mb={3}>
-                <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+                <Typography variant="h6" gutterBottom sx={{ 
+                  display: 'flex', 
+                  alignItems: 'center',
+                  '@media (max-width: 600px)': {
+                    fontSize: '1.1rem'
+                  }
+                }}>
                   <InfoIcon sx={{ mr: 1 }} /> About {city.name}
                 </Typography>
                 <Typography variant="body1" paragraph>
@@ -165,7 +184,11 @@ const CityPage = () => {
               <Divider sx={{ my: 3 }} />
               
               <Box>
-                <Typography variant="h6" gutterBottom>Quick Facts</Typography>
+                <Typography variant="h6" gutterBottom sx={{
+                  '@media (max-width: 600px)': {
+                    fontSize: '1.1rem'
+                  }
+                }}>Quick Facts</Typography>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <Paper variant="outlined" sx={{ p: 2, height: '100%' }}>

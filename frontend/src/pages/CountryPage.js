@@ -15,6 +15,7 @@ import {
   Breadcrumbs,
   Link
 } from '@mui/material';
+import '../styles/CityPage.css';
 import { getCountries, getCities } from '../services/api';
 import HomeIcon from '@mui/icons-material/Home';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
@@ -146,101 +147,43 @@ const CountryPage = () => {
         Popular Cities
       </Typography>
       
-      {/* Organize cities into rows of exactly 4 */}
-      {(() => {
-        const rows = [];
-        for (let i = 0; i < cities.length; i += 4) {
-          rows.push(cities.slice(i, i + 4));
-        }
-        
-        return rows.map((rowCities, rowIndex) => (
-          <div key={`row-${rowIndex}`} style={{ display: 'flex', marginBottom: '32px', width: '100%' }}>
-            {rowCities.map((city) => (
-              <div key={city.id} style={{ flex: '1 0 25%', maxWidth: '25%', padding: '0 16px', boxSizing: 'border-box' }}>
-                <Card 
-                  sx={{ 
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    cursor: 'pointer',
-                    transition: 'transform 0.2s',
-                    '&:hover': {
-                      transform: 'translateY(-4px)',
-                      boxShadow: 3,
-                    },
-                    borderRadius: '8px',
-                    overflow: 'hidden'
-                  }}
-                  onClick={() => handleCityClick(city)}
-                >
-                  <CardMedia
-                    component="img"
-                    height="180"
-                    image={getCityImage(city, country)}
-                    alt={city.name}
-                    sx={{ objectFit: 'cover' }}
-                  />
-                  <CardContent sx={{ p: 3, pt: 2.5, pb: 2.5, flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                    <Typography 
-                      gutterBottom 
-                      variant="h6" 
-                      component="h3"
-                      sx={{ 
-                        fontSize: '18px', 
-                        fontWeight: 500,
-                        height: '27px',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap'
-                      }}
-                    >
-                      {city.name}
-                    </Typography>
-                    <Typography 
-                      variant="body2" 
-                      color="text.secondary"
-                      sx={{ 
-                        height: '21px',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap'
-                      }}
-                    >
-                      {city.region}, {country?.name}
-                    </Typography>
-                    <Button 
-                      variant="text" 
-                      sx={{ 
-                        color: '#1a73e8',
-                        textTransform: 'none',
-                        padding: '4px 0',
-                        minWidth: 'auto',
-                        justifyContent: 'flex-start',
-                        alignItems: 'flex-start',
-                        width: '100%',
-                        marginTop: 'auto',
-                        fontWeight: 500,
-                        fontSize: '14px',
-                        mt: 1
-                      }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleCityClick(city);
-                      }}
-                    >
-                      Explore city →
-                    </Button>
-                  </CardContent>
-                </Card>
+      <div className="city-grid">
+        {(() => {
+          const cards = cities.map((city) => (
+            <div className="city-card-container" key={city.id}>
+              <div className="city-card" onClick={() => handleCityClick(city)}>
+                <img 
+                  className="city-image"
+                  src={getCityImage(city, country)}
+                  alt={city.name}
+                />
+                <div className="city-content">
+                  <div className="city-name">{city.name}</div>
+                  <div className="city-region">{city.region}</div>
+                  <Button 
+                    className="explore-button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCityClick(city);
+                    }}
+                  >
+                    Explore →
+                  </Button>
+                </div>
               </div>
-            ))}
-            {/* Add empty placeholders if row is not complete */}
-            {Array.from({ length: 4 - rowCities.length }, (_, i) => (
-              <div key={`empty-${i}`} style={{ flex: '1 0 25%', maxWidth: '25%', padding: '0 16px', boxSizing: 'border-box' }}></div>
-            ))}
-          </div>
-        ));
-      })()}
+            </div>
+          ));
+          
+          // Add invisible placeholders if needed to fill the last row
+          const remainder = cards.length % 4;
+          if (remainder !== 0) {
+            for (let i = 0; i < 4 - remainder; i++) {
+              cards.push(<div className="city-card-container placeholder" key={`empty-${i}`}></div>);
+            }
+          }
+          return cards;
+        })()}
+      </div>
 
       {hasMore && (
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4, mb: 4 }}>

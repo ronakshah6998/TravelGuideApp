@@ -262,57 +262,56 @@ const HomePage = () => {
           </Typography>
         )}
 
-        {rows.map((rowCountries, rowIndex) => (
-          <div key={`row-${rowIndex}`} style={{ display: 'flex', marginBottom: '32px', width: '100%' }}>
-            {rowCountries.map((country) => (
-              <div key={country.id} style={{ flex: '1 0 25%', maxWidth: '25%', padding: '0 16px', boxSizing: 'border-box' }}>
-                <Paper 
-                  elevation={0}
-                  className="country-card"
-                  onClick={() => handleCountryClick(country)}
-                >
-                  <Box className="flag-container">
-                    <div className="flag-icon">
-                      <img
-                        src={country.flagImageUri || (country.id && typeof country.id === 'string' ? 
-                          `https://flagcdn.com/${country.id.toLowerCase().substring(0, 2)}.svg` : 
-                          `https://via.placeholder.com/320x240?text=${encodeURIComponent(country.name || 'Country')}`
-                        )}
-                        alt={country.name || 'Country'}
-                      />
-                    </div>
-                  </Box>
-                  <Box sx={{ p: 3, pt: 2.5, pb: 2.5, flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                    <Typography className="country-name">
-                      {country.name || 'Country'}
-                    </Typography>
-                    <Typography className="cities-to-explore">
-                      {country.citiesToExplore || Math.floor(Math.random() * 6) + 2} cities to explore
-                    </Typography>
-                    <Button 
-                      variant="text" 
-                      className="view-cities-btn"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleCountryClick(country);
-                      }}
-                      sx={{ 
-                        textTransform: 'none',
-                        padding: '4px 0',
-                        minWidth: 'auto',
-                        justifyContent: 'flex-start',
-                        alignItems: 'flex-start',
-                        width: '100%'
-                      }}
-                    >
-                      View cities →
-                    </Button>
-                  </Box>
-                </Paper>
-              </div>
-            ))}
-          </div>
-        ))}
+        <div className="popular-destinations-row">
+          {uniqueCountries.map((country) => (
+            <div className="popular-destinations-card" key={country.id}>
+              <Paper 
+                elevation={0}
+                className="country-card"
+                onClick={() => handleCountryClick(country)}
+                sx={{ height: '100%' }}
+              >
+                <Box className="flag-container">
+                  <div className="flag-icon">
+                    <img
+                      src={country.flagImageUri || (country.id && typeof country.id === 'string' ? 
+                        `https://flagcdn.com/${country.id.toLowerCase().substring(0, 2)}.svg` : 
+                        `https://via.placeholder.com/320x240?text=${encodeURIComponent(country.name || 'Country')}`
+                      )}
+                      alt={country.name || 'Country'}
+                    />
+                  </div>
+                </Box>
+                <Box sx={{ p: 2, flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+                  <Typography className="country-name">
+                    {country.name || 'Country'}
+                  </Typography>
+                  <Typography className="cities-to-explore">
+                    {country.citiesToExplore || Math.floor(Math.random() * 6) + 2} cities to explore
+                  </Typography>
+                  <Button 
+                    variant="text" 
+                    className="view-cities-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCountryClick(country);
+                    }}
+                    sx={{ 
+                      textTransform: 'none',
+                      padding: '4px 0',
+                      minWidth: 'auto',
+                      justifyContent: 'flex-start',
+                      alignItems: 'flex-start',
+                      width: '100%'
+                    }}
+                  >
+                    View cities →
+                  </Button>
+                </Box>
+              </Paper>
+            </div>
+          ))}
+        </div>
       </Box>
 
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4, mb: 4 }}>

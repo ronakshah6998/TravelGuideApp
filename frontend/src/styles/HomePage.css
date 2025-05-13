@@ -14,9 +14,15 @@
   justify-content: center;
   border-radius: 8px 8px 0 0;
   overflow: hidden;
-  height: 180px;
+  height: 140px;
   padding: 0;
   width: 100%;
+}
+
+@media (max-width: 600px) {
+  .flag-container {
+    height: 120px;
+  }
 }
 
 .flag-icon {
@@ -46,9 +52,9 @@
   background-color: #ffffff;
   border: 1px solid #e0e0e0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  margin-bottom: 16px;
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .country-card:hover {
@@ -122,10 +128,15 @@
   margin-bottom: 8px;
   color: #202124;
   line-height: 1.5;
-  height: 27px; /* Fixed height for country name */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .country-name {
+    font-size: 16px;
+  }
 }
 
 .cities-to-explore {
@@ -134,7 +145,70 @@
   color: #5f6368;
   margin-bottom: 12px;
   font-weight: 400;
-  height: 21px; /* Fixed height for cities text */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .cities-to-explore {
+    font-size: 12px;
+  }
+}
+
+.popular-destinations-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -8px;
+  margin-right: -8px;
+  justify-content: flex-start;
+}
+
+.popular-destinations-card {
+  flex: 0 0 calc(25% - 16px);
+  max-width: calc(25% - 16px);
+  box-sizing: border-box;
+  padding: 0 8px 16px 8px;
+  display: flex;
+  align-items: stretch;
+  min-height: 320px;
+  margin-bottom: 16px;
+}
+
+.popular-destinations-card.placeholder {
+  visibility: hidden !important;
+  pointer-events: none;
+  min-height: 320px;
+  margin-bottom: 0;
+}
+
+
+@media (max-width: 1200px) {
+  .popular-destinations-card {
+    flex: 0 0 calc(33.333% - 16px);
+    max-width: calc(33.333% - 16px);
+  }
+}
+
+@media (max-width: 900px) {
+  .popular-destinations-card {
+    flex: 0 0 calc(50% - 16px);
+    max-width: calc(50% - 16px);
+  }
+}
+
+@media (max-width: 600px) {
+  .popular-destinations-row {
+    flex-direction: column;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .popular-destinations-card {
+    max-width: 100%;
+    flex: 0 0 100%;
+    padding: 0 0 16px 0;
+    margin-bottom: 16px;
+  }
 }
 
 /* Popular destinations title */
@@ -145,4 +219,14 @@
   color: var(--dark-text);
   margin-left: 0;
   letter-spacing: 0.25px;
+}
+
+@media (max-width: 600px) {
+  .destinations-title {
+    font-size: 18px;
+  }
+  
+  .section-title .icon {
+    font-size: 20px;
+  }
 }
