@@ -49,3 +49,20 @@ cd globe-scout
   ├── data/                 # Country and city metadata
   ├── prompts/              # Preprompts and guardrails
   ├── README.md             # Project documentation
+
+🔮 Future Scope
+🧩 Gamified Learning – Add interactive quizzes, leaderboards, and badges to make learning fun.
+
+🔊 Voice Support – Enable voice-to-text input for accessibility and ease of use.
+
+🌐 Multilingual Support – Introduce translations and multilingual responses for broader reach.
+
+✈️ Virtual Tours – Integrate with Google Earth or Map APIs for immersive 3D exploration.
+
+🎒 Curriculum Integration – Align content with school geography syllabus and enable teacher-student dashboards.
+
+📶 Offline Mode – Allow access to preloaded data in low-connectivity environments.
+
+📚 Cross-Subject Expansion – Extend the app to include history, culture, and current events.
+
+
