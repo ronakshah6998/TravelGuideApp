@@ -42,3 +42,10 @@
 ```bash
 git clone https://github.com/your-username/globe-scout.git
 cd globe-scout
+
+/globe-scout
+  ├── frontend/             # UI components
+  ├── backend/              # Server + LLM integration
+  ├── data/                 # Country and city metadata
+  ├── prompts/              # Preprompts and guardrails
+  ├── README.md             # Project documentation
