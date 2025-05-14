@@ -327,7 +327,7 @@ function App() {
                         <i className="fas fa-globe-americas text-2xl text-blue-300"></i>
                         <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                     </div>
-                    <h1 className="text-xl font-bold">World Explorer <span className="text-xs font-normal bg-blue-800 px-2 py-0.5 rounded-full ml-2">PRO</span></h1>
+                    <h1 className="text-xl font-bold">Globe Scout <span className="text-xs font-normal bg-blue-800 px-2 py-0.5 rounded-full ml-2">PRO</span></h1>
                 </div>
                 <div className="flex items-center space-x-3">
                     <button className="bg-white bg-opacity-20 backdrop-blur-sm px-3 py-1.5 rounded-full font-medium hover:bg-opacity-30 transition flex items-center text-sm">
@@ -437,7 +437,7 @@ function App() {
                     <div className="globe-float inline-block mb-4">
                         <i className="fas fa-globe text-6xl text-blue-500"></i>
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-800 mb-2">Welcome to World Explorer!</h2>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-2">Welcome to Globe Scout!</h2>
                     <p className="text-gray-600 mb-4">I'm your virtual travel guide. Ask me about destinations, cultures, landmarks, or travel tips!</p>
                     <div className="flex flex-wrap justify-center gap-2">
                         <button 
@@ -483,7 +483,7 @@ function App() {
                             <div>
                                 {!message.isUser && (
                                     <div className="flex items-center">
-                                        <span className="font-medium text-xs">World Explorer</span>
+                                        <span className="font-medium text-xs">Globe Scout</span>
                                         <span className="ml-1.5 text-xs text-gray-400">Just now</span>
                                     </div>
                                 )}
@@ -507,7 +507,7 @@ function App() {
                             </div>
                             <div>
                                 <div className="flex items-center">
-                                    <span className="font-medium text-xs">World Explorer</span>
+                                    <span className="font-medium text-xs">Globe Scout</span>
                                     <span className="ml-1.5 text-xs text-gray-400">Typing</span>
                                 </div>
                                 <div className="bg-white rounded-lg p-2.5 mt-1 shadow-sm border border-gray-100">
