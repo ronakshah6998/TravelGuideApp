@@ -176,37 +176,82 @@ function App() {
   };
 
   // Process user message and generate response
-  const processUserMessage = (message) => {
-    const lowerMessage = message.toLowerCase();
-    let response = '';
-    
-    // Show typing indicator
+  const processUserMessage = async (message) => {
     setIsTyping(true);
+    const lowerMessage = message.toLowerCase();
     
-    // Check if we have a specific response
+    try {
+      // Make API call to backend
+      const response = await fetch('http://localhost:5000/api/chat/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: message,
+          user_id: 'user_123', // You can generate a unique user ID or use authentication
+          location: null // You can extract location from message if needed
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to get response from server');
+      }
+      
+      const data = await response.json();
+      
+      // Format the response for display
+      const formattedResponse = `
+        <div class="flex items-start">
+          <div class="bg-blue-100 text-blue-800 p-2 rounded-full mr-3">
+            <i class="fas fa-robot"></i>
+          </div>
+          <div>
+            <p>${data.message}</p>
+          </div>
+        </div>
+      `;
+      
+      // Update UI with response
+      setIsTyping(false);
+      addMessage(formattedResponse);
+      
+      // Show quick follow-up suggestions
+      showFollowUpSuggestions(lowerMessage);
+      
+    } catch (error) {
+      console.error('Error sending message:', error);
+      
+      // Fallback to local response if API call fails
+      const fallbackResponse = `
+        <div class="flex items-start">
+          <div class="bg-red-100 text-red-800 p-2 rounded-full mr-3">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <div>
+            <p>Sorry, I'm having trouble connecting to the server. Here's a local response:</p>
+            <div class="mt-2">${getLocalResponse(lowerMessage)}</div>
+          </div>
+        </div>
+      `;
+      
+      setIsTyping(false);
+      addMessage(fallbackResponse);
+    }
+  };
+
+  // Get local response when API call fails
+  const getLocalResponse = (message) => {
+    // Check if we have a specific response in travelKnowledge
     for (const key in travelKnowledge) {
-      if (lowerMessage.includes(key)) {
-        response = travelKnowledge[key];
-        break;
+      if (message.includes(key.toLowerCase())) {
+        return travelKnowledge[key];
       }
     }
     
     // If no specific response, use a generic one
-    if (!response) {
-      const randomIndex = Math.floor(Math.random() * genericResponses.length);
-      response = genericResponses[randomIndex];
-    }
-    
-    // Show typing indicator for 1-2 seconds before responding
-    const delay = 1000 + Math.random() * 1000; // 1-2 seconds
-    
-    setTimeout(() => {
-      setIsTyping(false);
-      addMessage(response);
-      
-      // Show quick follow-up suggestions
-      showFollowUpSuggestions(lowerMessage);
-    }, delay);
+    const randomIndex = Math.floor(Math.random() * genericResponses.length);
+    return genericResponses[randomIndex];
   };
 
   // Show follow-up suggestions based on message
