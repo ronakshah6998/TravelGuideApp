@@ -5,12 +5,47 @@ from dotenv import load_dotenv
 import requests
 from chat import chat_service
 from config import config
+import json
+import spacy
 
 # Load environment variables
 load_dotenv()
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
+
+# Load spaCy model for NER
+nlp = spacy.load("en_core_web_sm")
+
+# Wikipedia Summary API
+def get_wikipedia_summary(topic):
+    url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{topic}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json().get("extract", "")
+    return ""
+
+# Extract location entities (cities/countries) using spaCy NER
+def extract_location_entities(text):
+    doc = nlp(text)
+    return [ent.text for ent in doc.ents if ent.label_ in ("GPE", "LOC")]
+
+# GeoDB API
+def get_geodb_info(city):
+    url = "https://wft-geo-db.p.rapidapi.com/v1/geo/cities"
+    headers = {
+        "X-RapidAPI-Key": "9e37116e1dmshcc68d934842e0b9p16645ejsnf34771d0c6dc",  # Replace with your actual RapidAPI key
+        "X-RapidAPI-Host": "wft-geo-db.p.rapidapi.com"
+    }
+    params = {"namePrefix": city, "limit": 1}
+    response = requests.get(url, headers=headers, params=params)
+    print(f"GeoDB status: {response.status_code}")
+    print(f"GeoDB response: {response.text}")  # Good for debugging
+    if response.status_code == 200 and response.json()["data"]:
+        city_data = response.json()["data"][0]
+        return f"{city_data['name']}, {city_data['country']}, population: {city_data['population']}"
+    return ""
+
 
 # Error handling
 class APIError(Exception):
@@ -167,8 +202,10 @@ def send_chat_message():
     location = data.get('location')
     
     try:
-        response = chat_service.send_message(message, user_id, location)
-        return jsonify(response)
+        # TEST
+        #response = chat_service.send_message(message, user_id, location)
+        #return jsonify(response)
+        return get_rag()
     except Exception as e:
         raise APIError(str(e), 500)
 
@@ -208,6 +245,50 @@ def get_api_status():
         'using_mock_data': config.USE_MOCK_DATA,
         'geo_api_key_type': 'dummy' if config.USE_MOCK_DATA else 'real'
     })
+
+# TEST
+@app.route('/api/rag', methods=['POST'])
+def get_rag():
+    user_input = request.json.get("message", "")
+
+    # Extract locations from the input
+    locations = extract_location_entities(user_input)
+    print(f"@@@@@@ locations used: {locations}")
+    info = ""
+    # If a location was found, use it; otherwise, use the whole input
+    if locations:
+        topic = locations[0]  # Pick the first detected location
+        info = get_wikipedia_summary(topic)
+        geo_info = get_geodb_info(topic)
+        print(f"@@@@@@ geo_info used: {geo_info}")
+        
+        if geo_info:
+            info += f"\n\nGeo Info: {geo_info}"
+    else:
+        # Fallback if no location is found, use the full input for general query
+        info = get_wikipedia_summary(user_input)
+
+    
+    prompt = f"""Answer the following question like you're explaining to a curious teenger from India. Keep it short (probably 3 to 5 sentences), fun, and use simple words. Add a cool fact if it helps! Question is - {user_input}, and to support the answer use the following information: {info}"""
+    print(f"@@@@@@ PROMPT used: {prompt}")
+    response = requests.post(
+        "http://localhost:11434/api/generate",
+        json={"model": "phi3", "prompt": prompt},
+        stream=True
+    )
+
+    output = ""
+    try:
+        for line in response.iter_lines():
+            if line:
+                data = json.loads(line.decode("utf-8"))
+                if "response" in data:
+                    output += data["response"]
+    except json.JSONDecodeError as e:
+        return jsonify({"error": "Failed to decode Ollama response", "details": str(e)}), 500
+
+    return jsonify({"message": output.strip()})
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
