@@ -33,10 +33,7 @@ def extract_location_entities(text):
 # GeoDB API
 def get_geodb_info(city):
     url = "https://wft-geo-db.p.rapidapi.com/v1/geo/cities"
-    headers = {
-        "X-RapidAPI-Key": "9e37116e1dmshcc68d934842e0b9p16645ejsnf34771d0c6dc",  # Replace with your actual RapidAPI key
-        "X-RapidAPI-Host": "wft-geo-db.p.rapidapi.com"
-    }
+    headers = config.get_geo_headers()
     params = {"namePrefix": city, "limit": 1}
     response = requests.get(url, headers=headers, params=params)
     print(f"GeoDB status: {response.status_code}")

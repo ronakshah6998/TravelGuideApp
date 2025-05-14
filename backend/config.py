@@ -7,7 +7,7 @@ load_dotenv()
 # API Configuration
 class APIConfig:
     # GEOdb API configuration
-    GEO_API_KEY = '9e37116e1dmshcc68d934842e0b9p16645ejsnf34771d0c6dc'  # Hardcoded for now to ensure it works
+    GEO_API_KEY = os.environ['GEO_API_KEY']  # This will raise an error if the key is not in .env
     GEO_API_URL = 'https://wft-geo-db.p.rapidapi.com/v1'
     
     # SwiftChat API configuration
