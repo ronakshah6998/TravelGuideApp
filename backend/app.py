@@ -217,7 +217,7 @@ def send_chat_message():
             # Fallback if no location is found, use the full input for general query
             info = get_wikipedia_summary(user_input)
 
-        prompt = f"""Answer the following question like you're explaining to a curious teenager from India. Keep it short (probably 3 to 5 sentences), fun, and use simple words. Add a cool fact if it helps! Question is - {user_input}, and to support the answer use the following information: {info}"""
+        prompt = f"""Answer the following question like you're explaining to a curious teenager from India. Keep it short (probably 3 to 5 sentences), fun, and use simple words. Use emojis and analogies to engage kids' imagination. Add a cool fact if it helps! Question is - {user_input}, and to support the answer use the following information: {info}"""
         print(f"@@@@@@ PROMPT used: {prompt}")
         
         # Call Ollama API
