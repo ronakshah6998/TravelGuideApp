@@ -197,16 +197,57 @@ def send_chat_message():
     if not data or 'message' not in data:
         raise APIError('Message is required', 400)
     
-    message = data.get('message')
-    user_id = data.get('user_id', 'anonymous')
-    location = data.get('location')
+    user_input = data.get('message')
     
     try:
-        # TEST
-        #response = chat_service.send_message(message, user_id, location)
-        #return jsonify(response)
-        return get_rag()
+        # Extract locations from the input
+        locations = extract_location_entities(user_input)
+        print(f"@@@@@@ locations used: {locations}")
+        info = ""
+        # If a location was found, use it; otherwise, use the whole input
+        if locations:
+            topic = locations[0]  # Pick the first detected location
+            info = get_wikipedia_summary(topic)
+            geo_info = get_geodb_info(topic)
+            print(f"@@@@@@ geo_info used: {geo_info}")
+            
+            if geo_info:
+                info += f"\n\nGeo Info: {geo_info}"
+        else:
+            # Fallback if no location is found, use the full input for general query
+            info = get_wikipedia_summary(user_input)
+
+        prompt = f"""Answer the following question like you're explaining to a curious teenager from India. Keep it short (probably 3 to 5 sentences), fun, and use simple words. Add a cool fact if it helps! Question is - {user_input}, and to support the answer use the following information: {info}"""
+        print(f"@@@@@@ PROMPT used: {prompt}")
+        
+        # Call Ollama API
+        response = requests.post(
+            "http://localhost:11434/api/generate",
+            json={"model": "phi3", "prompt": prompt},
+            stream=True
+        )
+
+        output = ""
+        try:
+            for line in response.iter_lines():
+                if line:
+                    data = json.loads(line.decode("utf-8"))
+                    if "response" in data:
+                        output += data["response"]
+        except json.JSONDecodeError as e:
+            error_msg = "Failed to decode Ollama response"
+            print(f"{error_msg}: {str(e)}")
+            return jsonify({"error": error_msg, "details": str(e)}), 500
+
+        # Return in the format expected by the frontend
+        return jsonify({
+            "message": output.strip(),
+            "conversation_id": data.get('user_id', 'anonymous'),
+            "status": "success"
+        })
+        
     except Exception as e:
+        print(f"Error in send_chat_message: {str(e)}")
         raise APIError(str(e), 500)
 
 @app.route('/api/chat/history', methods=['GET'])
