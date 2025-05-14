@@ -124,7 +124,8 @@ travel-guide/
 | UI           | Mobile responsive layout          |
 
 
-##🔮 Future Scope
+## 🔮 Future Scope
+
 🧩 Gamified Learning – Add interactive quizzes, leaderboards, and badges to make learning fun.
 
 🔊 Voice Support – Enable voice-to-text input for accessibility and ease of use.
