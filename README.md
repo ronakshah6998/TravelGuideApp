@@ -70,6 +70,11 @@ cd globe-scout
    ```
    The backend will be available at `http://localhost:5000`
 
+6. Install [Ollama](https://ollama.com/download) for your OS, if not already and then run following commands:
+   ```bash
+   ollama run phi3
+   ```
+
 ## Frontend Setup
 
 1. Navigate to the frontend directory:
