@@ -411,9 +411,9 @@ function App() {
                         <div className="flex items-center justify-between mb-1.5">
                             <div>
                                 <div className="font-medium text-sm">Current Location</div>
-                                <div className="text-xs opacity-90">New York, USA</div>
+                                <div className="text-xs opacity-90">Pune, India</div>
                             </div>
-                            <div className="text-2xl">72°F</div>
+                            <div className="text-2xl">26°C</div>
                         </div>
                         <div className="flex items-center justify-between text-xs">
                             <div className="flex items-center">
@@ -441,28 +441,28 @@ function App() {
                     <p className="text-gray-600 mb-4">I'm your virtual travel guide. Ask me about destinations, cultures, landmarks, or travel tips!</p>
                     <div className="flex flex-wrap justify-center gap-2">
                         <button 
-                            onClick={() => sendQuickQuestion("Best beaches in the world")}
+                            onClick={() => sendQuickQuestion("Tell me about countries to explore")}
                             className="suggestion-chip bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm hover:bg-blue-200 transition flex items-center"
                         >
-                            <i className="fas fa-umbrella-beach mr-1"></i> Best beaches
+                            <i className="fas fa-globe-americas mr-1"></i> Explore Countries
                         </button>
                         <button 
-                            onClick={() => sendQuickQuestion("Famous landmarks to visit")}
+                            onClick={() => sendQuickQuestion("What cities should I visit?")}
                             className="suggestion-chip bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm hover:bg-blue-200 transition flex items-center"
                         >
-                            <i className="fas fa-monument mr-1"></i> Landmarks
+                            <i className="fas fa-city mr-1"></i> Explore Cities
                         </button>
                         <button 
-                            onClick={() => sendQuickQuestion("Budget travel tips")}
+                            onClick={() => sendQuickQuestion("Test my geography knowledge")}
                             className="suggestion-chip bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm hover:bg-blue-200 transition flex items-center"
                         >
-                            <i className="fas fa-wallet mr-1"></i> Budget tips
+                            <i className="fas fa-question-circle mr-1"></i> Quiz
                         </button>
                         <button 
-                            onClick={() => sendQuickQuestion("Travel itineraries suggestions")}
+                            onClick={() => sendQuickQuestion("Share an interesting travel fact")}
                             className="suggestion-chip bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm hover:bg-blue-200 transition flex items-center"
                         >
-                            <i className="fas fa-route mr-1"></i> Itineraries
+                            <i className="fas fa-lightbulb mr-1"></i> Fun Facts
                         </button>
                     </div>
                 </div>
