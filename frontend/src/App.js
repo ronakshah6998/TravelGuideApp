@@ -3,7 +3,23 @@ import './App.css';
 
 function App() {
   // Chat state management
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([
+    {
+      id: Date.now(),
+      content: `
+        <div class="flex items-start">
+          <div class="bg-blue-100 text-blue-800 p-2 rounded-full mr-3">
+            <i class="fas fa-globe-americas"></i>
+          </div>
+          <div>
+            <p>Hello fellow traveler! 🌍 I'm your World Explorer assistant, here to help you discover amazing places, plan your trips, and learn about different cultures.</p>
+            <p class="mt-2">Where would you like to explore today?</p>
+          </div>
+        </div>
+      `,
+      isUser: false
+    }
+  ]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [quickSuggestions, setQuickSuggestions] = useState([]);
@@ -296,22 +312,8 @@ function App() {
     setQuickSuggestions([]);
   };
 
-  // Initial welcome message
-  useEffect(() => {
-    setTimeout(() => {
-      addMessage(`
-        <div class="flex items-start">
-          <div class="bg-blue-100 text-blue-800 p-2 rounded-full mr-3">
-            <i class="fas fa-globe-americas"></i>
-          </div>
-          <div>
-            <p>Hello fellow traveler! 🌍 I'm your World Explorer assistant, here to help you discover amazing places, plan your trips, and learn about different cultures.</p>
-            <p class="mt-2">Where would you like to explore today?</p>
-          </div>
-        </div>
-      `);
-    }, 1000);
-  }, []);
+  // Welcome message is now initialized in the messages state array
+  // No need for a useEffect hook to add it
 
   return (
     <div className="App bg-white min-h-screen">
@@ -356,12 +358,12 @@ function App() {
                         </div>
                         <ul className="space-y-1.5">
                             <li className="flex items-center p-1.5 rounded-md hover:bg-blue-50 cursor-pointer text-sm">
-                                <i className="fas fa-plane mr-2.5 text-blue-500"></i>
-                                <span>Flight Finder</span>
+                                <i className="fas fa-money-bill-wave mr-2.5 text-blue-500"></i>
+                                <span>Currency Calculator</span>
                             </li>
                             <li className="flex items-center p-1.5 rounded-md hover:bg-blue-50 cursor-pointer text-sm">
-                                <i className="fas fa-hotel mr-2.5 text-blue-500"></i>
-                                <span>Hotel Search</span>
+                                <i className="fas fa-lightbulb mr-2.5 text-blue-500"></i>
+                                <span>Travel Tips</span>
                             </li>
                             <li className="flex items-center p-1.5 rounded-md hover:bg-blue-50 cursor-pointer text-sm">
                                 <i className="fas fa-utensils mr-2.5 text-blue-500"></i>
