@@ -159,18 +159,28 @@ function App() {
   };
 
   // Add a message to the chat
-  const addMessage = (content, isUser = false) => {
-    const newMessage = {
-      id: Date.now(),
-      content,
-      isUser
-    };
-    setMessages(prevMessages => [...prevMessages, newMessage]);
+  const addMessage = (message, isUser = false, tempId = null) => {
+    if (tempId) {
+      // If this is a temporary message, update it if it exists
+      setMessages(prevMessages => {
+        const existingIndex = prevMessages.findIndex(m => m.tempId === tempId);
+        if (existingIndex >= 0) {
+          const newMessages = [...prevMessages];
+          newMessages[existingIndex] = { content: message, tempId };
+          return newMessages;
+        }
+        return [...prevMessages, { content: message, tempId }];
+      });
+    } else {
+      // Regular message
+      setMessages(prevMessages => [...prevMessages, { content: message, isUser }]);
+    }
     
-    // Scroll to bottom of chat
+    // Scroll to bottom
     setTimeout(() => {
-      if (chatContainerRef.current) {
-        chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+      const chatContainer = document.getElementById('chat-container');
+      if (chatContainer) {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
       }
     }, 100);
   };
@@ -179,6 +189,22 @@ function App() {
   const processUserMessage = async (message) => {
     setIsTyping(true);
     const lowerMessage = message.toLowerCase();
+    
+    // Add a temporary message with typing indicator
+    const tempId = Date.now().toString();
+    const initialMessage = `
+      <div class="flex items-start">
+        <div class="bg-blue-100 text-blue-800 p-2 rounded-full mr-3">
+          <i class="fas fa-robot"></i>
+        </div>
+        <div>
+          <p>Let me think about that...</p>
+        </div>
+      </div>
+    `;
+    
+    // Add the temporary message to the chat
+    addMessage(initialMessage, false, tempId);
     
     try {
       // Make API call to backend
@@ -189,8 +215,8 @@ function App() {
         },
         body: JSON.stringify({
           message: message,
-          user_id: 'user_123', // You can generate a unique user ID or use authentication
-          location: null // You can extract location from message if needed
+          user_id: 'user_123',
+          location: null
         })
       });
       
@@ -214,7 +240,13 @@ function App() {
       
       // Update UI with response
       setIsTyping(false);
-      addMessage(formattedResponse);
+      
+      // Replace the temporary message with the actual response
+      setMessages(prevMessages => 
+        prevMessages.map(msg => 
+          msg.tempId === tempId ? { ...msg, content: formattedResponse } : msg
+        )
+      );
       
       // Show quick follow-up suggestions
       showFollowUpSuggestions(lowerMessage);
@@ -223,20 +255,30 @@ function App() {
       console.error('Error sending message:', error);
       
       // Fallback to local response if API call fails
+      const errorMessage = error.message || 'Failed to get response';
       const fallbackResponse = `
         <div class="flex items-start">
           <div class="bg-red-100 text-red-800 p-2 rounded-full mr-3">
             <i class="fas fa-exclamation-triangle"></i>
           </div>
           <div>
-            <p>Sorry, I'm having trouble connecting to the server. Here's a local response:</p>
-            <div class="mt-2">${getLocalResponse(lowerMessage)}</div>
+            <p>Error: ${errorMessage}</p>
+            <p class="mt-2">Here's a local response instead:</p>
+            <div class="mt-2 p-2 bg-gray-100 rounded">
+              ${getLocalResponse(lowerMessage)}
+            </div>
           </div>
         </div>
       `;
       
       setIsTyping(false);
-      addMessage(fallbackResponse);
+      
+      // Replace the temporary message with the error response
+      setMessages(prevMessages => 
+        prevMessages.map(msg => 
+          msg.tempId === tempId ? { ...msg, content: fallbackResponse } : msg
+        )
+      );
     }
   };
 
@@ -312,6 +354,8 @@ function App() {
       `);
     }, 1000);
   }, []);
+
+
 
   return (
     <div className="App bg-white min-h-screen">
@@ -392,7 +436,7 @@ function App() {
                                     <div className="text-xs opacity-80">Japan</div>
                                 </div>
                             </div>
-                            <div className="destination-card" style={{backgroundImage: "url('https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60')", height: "70px"}}>                                <div className="destination-card-content">
+                            <div className="destination-card" style={{backgroundImage: "url('https://images.unsplash.com/photo-1520250497591-b112f2f40d60?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60')", height: "70px"}}>                                <div className="destination-card-content">
                                     <div className="font-medium text-xs">Santorini</div>
                                     <div className="text-xs opacity-80">Greece</div>
                                 </div>
@@ -419,8 +463,11 @@ function App() {
                                 <span>Partly Cloudy</span>
                             </div>
                             <div className="flex items-center">
-                                <i className="fas fa-wind mr-1"></i>
-                                <span>8 mph</span>
+                                <div className="flex items-center space-x-1">
+                                    <div className="w-2 h-2 rounded-full bg-blue-400 animate-bounce"></div>
+                                    <div className="w-2 h-2 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                                    <div className="w-2 h-2 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -469,31 +516,36 @@ function App() {
                 {/* Chat messages container */}
                 <div id="chat-container" ref={chatContainerRef} className="flex-1 overflow-y-auto px-4 space-y-3">
                     {/* Render chat messages */}
-                    {messages.map(message => (
-                        <div key={message.id} className={`flex ${message.isUser ? 'justify-end' : 'items-start'} mb-3 message-enter`}>
-                            {!message.isUser && (
-                                <div className="mr-2 mt-0.5">
-                                    <div className="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center">
-                                        <i className="fas fa-globe-americas text-blue-500 text-sm"></i>
-                                    </div>
-                                </div>
-                            )}
-                            <div>
-                                {!message.isUser && (
-                                    <div className="flex items-center">
-                                        <span className="font-medium text-xs">World Explorer</span>
-                                        <span className="ml-1.5 text-xs text-gray-400">Just now</span>
+                    {messages.map((message, index) => {
+                        // Handle both old and new message formats
+                        const content = typeof message === 'string' ? message : message.content;
+                        const isUser = message.isUser || false;
+                        const key = message.id || `msg-${index}`;
+                        
+                        return (
+                            <div key={key} className={`flex ${isUser ? 'justify-end' : 'items-start'} mb-3`}>
+                                {!isUser && (
+                                    <div className="mr-2 mt-0.5">
+                                        <div className="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center">
+                                            <i className="fas fa-globe-americas text-blue-500 text-sm"></i>
+                                        </div>
                                     </div>
                                 )}
-                                <div className={`${message.isUser ? 'bg-blue-600 text-white' : 'bg-white'} rounded-lg ${message.isUser ? 'p-2.5' : 'p-2.5 mt-1 border border-gray-100'} ${message.isUser ? 'max-w-xs md:max-w-md' : ''} shadow-sm card-hover`}>
+                                <div>
+                                    {!isUser && (
+                                        <div className="flex items-center">
+                                            <span className="font-medium text-xs">World Explorer</span>
+                                            <span className="ml-1.5 text-xs text-gray-400">Just now</span>
+                                        </div>
+                                    )}
                                     <div 
-                                        className="text-sm"
-                                        dangerouslySetInnerHTML={{ __html: message.content }}
+                                        className={`${isUser ? 'bg-blue-600 text-white' : 'bg-white'} rounded-lg ${isUser ? 'p-2.5' : 'p-2.5 mt-1 border border-gray-100'} ${isUser ? 'max-w-xs md:max-w-md' : ''} shadow-sm card-hover`}
+                                        dangerouslySetInnerHTML={{ __html: content }}
                                     />
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                     
                     {/* Typing indicator */}
                     {isTyping && (
@@ -509,11 +561,6 @@ function App() {
                                     <span className="ml-1.5 text-xs text-gray-400">Typing</span>
                                 </div>
                                 <div className="bg-white rounded-lg p-2.5 mt-1 shadow-sm border border-gray-100">
-                                    <div className="typing-indicator">
-                                        <span></span>
-                                        <span></span>
-                                        <span></span>
-                                    </div>
                                 </div>
                             </div>
                         </div>
